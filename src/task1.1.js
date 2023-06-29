@@ -221,8 +221,26 @@ let review2 = new review('20',"Biba2",new Date,"good",{service : 9, price : 9, v
  let reviews = [review1,review2];
 
 let product1 = new Product("1","apple","red",10,"wood",['XS', 'S', 'M', 'L', 'XL', 'XXL'],'S',23,new Date(),reviews,["image1","image2","image3"]);
+let product2 = new Product("2","banana","yellow",12,"wood",['XS', 'S', 'M', 'L', 'XL', 'XXL'],'L',20,new Date(),reviews,["image4","image5","image6"]);
 
+let products = [product1,product2];
+function searchProducts(products, search){
 
+    search = search.toLowerCase();
+    let productsWithKayWord = [];
+
+    for(let product of products){
+        let name = product.getProductName();
+        name = name.toLowerCase();
+        let description = product.getProductDescription();
+        description = description.toLowerCase();
+        if(name.indexOf(search)>=0 || description.indexOf(search)>=0){
+            productsWithKayWord.push(product);
+        }
+    }
+
+    return productsWithKayWord;
+}
 
 
 
@@ -263,3 +281,8 @@ console.log(product1.reviews.length + ' end length'); */
 
 /* console.log(product1.getAverageRating());
  */
+
+/* console.log(searchProducts(products,"apple"))
+console.log(searchProducts(products, "a")) */
+
+console.log(searchProducts(products,"1"))
