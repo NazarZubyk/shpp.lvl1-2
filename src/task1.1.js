@@ -173,7 +173,7 @@ function Product(ID,name,description,price,brand,sizes,activeSize,quantity,date,
  * @param {String} author 
  * @param {Date} date 
  * @param {string} comment 
- * @param {Array<kay : value>} rating 
+ * @param {Array<key : value>} rating 
  */
 function review(ID,author,date,comment,rating){
     this.ID = ID;
@@ -220,14 +220,17 @@ let review2 = new review('20',"Biba2",new Date,"good",{service : 9, price : 9, v
 
  let reviews = [review1,review2];
 
-let product1 = new Product("1","apple","red",10,"wood",['XS', 'S', 'M', 'L', 'XL', 'XXL'],'S',23,new Date(),reviews,["image1","image2","image3"]);
-let product2 = new Product("2","banana","yellow",12,"wood",['XS', 'S', 'M', 'L', 'XL', 'XXL'],'L',20,new Date(),reviews,["image4","image5","image6"]);
+let product1 = new Product("111","b","red",10,"wood",['XS', 'S', 'M', 'L', 'XL', 'XXL'],'S',23,new Date(),reviews,["image1","image2","image3"]);
+let product2 = new Product("444","aanana","yellow",12,"wood",['XS', 'S', 'M', 'L', 'XL', 'XXL'],'L',20,new Date(),reviews,["image4","image5","image6"]);
+let product3 = new Product("13","banana","yellow",12,"wood",['XS', 'S', 'M', 'L', 'XL', 'XXL'],'L',20,new Date(),reviews,["image4","image5","image6"]);
+let product4 = new Product("985","banana","yellow",12,"wood",['XS', 'S', 'M', 'L', 'XL', 'XXL'],'L',20,new Date(),reviews,["image4","image5","image6"]);
 
-let products = [product1,product2];
+let products = [product4,product3,product2,product1];
+
+
 function searchProducts(products, search){
-
     search = search.toLowerCase();
-    let productsWithKayWord = [];
+    let productsWithKeyWord = [];
 
     for(let product of products){
         let name = product.getProductName();
@@ -235,13 +238,87 @@ function searchProducts(products, search){
         let description = product.getProductDescription();
         description = description.toLowerCase();
         if(name.indexOf(search)>=0 || description.indexOf(search)>=0){
-            productsWithKayWord.push(product);
+            productsWithKeyWord.push(product);
         }
     }
 
-    return productsWithKayWord;
+    return productsWithKeyWord;
 }
 
+/**
+ * Sorts your products array by rule
+ * @param {Array of Product} products 
+ * @param {String} sortRule you can use 'sortByID' 'sortByName' or 'sortByPrice'
+ */
+function sortProducts(products,sortRule){
+    let func;
+
+    /**
+     * Function for gets specified parameter of Product
+     * @param {number} index of cell of array 
+     * @returns 
+     */
+    function funcID(index){
+        return products[index].getProductID();
+    }
+    function funcName(index){
+        return products[index].getProductName();
+    }
+    function funcPrice(index){
+        return products[index].getProductName();
+    }
+    /**
+     * Choose function for sorting by specific rule
+     */
+    switch(sortRule){
+        case 'sortByID' :
+            func = funcID;
+            break;
+        case 'sortByName':
+            func = funcName;
+            break;
+        case 'sortByPrice':
+            func = funcPrice;
+            break;
+    }
+    
+    sorting(products,func)
+
+
+    /**
+     * Recursion sorting algorithm
+     * @param {Array of Produc} products 
+     * @param {*} func 
+     */
+    function sorting(products,func){
+        let first, second;
+        let flag = true;
+
+        for(let i = 0; i < products.length-1; i++){
+
+            first = products[i];
+            second = products[i+1];
+
+            if(func != undefined && func(i)>func(i+1)){
+                products[i] = second;
+                products[i+1] = first;
+                flag = false;
+            }
+            
+        }
+
+        if (!flag){
+            sorting(products,func)
+        }
+    }
+}
+
+sortProducts(products,"sortByName");
+
+console.log(products[0].getProductID());
+console.log(products[1].getProductID());
+console.log(products[2].getProductID());
+console.log(products[3].getProductID());
 
 
 /* console.log(product1.getReviewByID('10'))
@@ -283,6 +360,5 @@ console.log(product1.reviews.length + ' end length'); */
  */
 
 /* console.log(searchProducts(products,"apple"))
-console.log(searchProducts(products, "a")) */
-
-console.log(searchProducts(products,"1"))
+console.log(searchProducts(products, "a"))
+console.log(searchProducts(products,"1")) */
