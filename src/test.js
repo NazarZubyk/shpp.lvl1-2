@@ -1,7 +1,5 @@
-describe("pow", function() {
+if("10" > "2")
+    console.log("works fine1") 
 
-    it("возводит число в степень n", function() {
-      assert.equal(pow(2, 3), 8);
-    });
-  
-  });
+if("10" > 2)
+    console.log("works fine2") 
