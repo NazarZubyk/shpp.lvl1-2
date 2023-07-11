@@ -333,5 +333,5 @@ console.log(clothes)
 
 let finded = searchProducts(clothes, 'ooooo') 
 
-console.log(finded) */
+console.log(finded)  */
 

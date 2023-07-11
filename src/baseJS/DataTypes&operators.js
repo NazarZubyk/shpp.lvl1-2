@@ -365,4 +365,4 @@ console.log(product1.reviews.length + ' end length'); */
 
 /* console.log(searchProducts(products,"apple"))
 console.log(searchProducts(products, "a"))
-console.log(searchProducts(products,"1")) */
+console.log(searchProducts(products,"1"))  */
