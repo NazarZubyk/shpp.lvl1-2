@@ -12,11 +12,7 @@ function bar(){
  */
 
 // Modifying each word
-let words = ["spray", "limit", "exuberant", "destruction", "elite", "present"];
-
-console.log(words)
-
-a = words.join(" - ")
-
+let a = {};
+a.aca = "a";
 console.log(a)
 
