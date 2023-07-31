@@ -25,11 +25,28 @@ let contents = readHttpLikeInput();
 
 // вот эту функцию собственно надо написать
 function parseTcpStringAsHttpRequest(string) { 
+  stringSplit = string.split("\n");
+
+  //formation of headers
+  headersFromStr = stringSplit
+  .filter(text => text?.includes(":"))
+  .reduce((acum, actual)=>{
+    actualSplited = actual.split(":")
+    .map(cell=> cell.trim());
+    acum[actualSplited[0]] = actualSplited[1];
+    return acum;
+  },{})
+  
+  //formation of body
+  bodyFromString = string.split("\n\n")[1];
+
+  
   return { 
-    method: "...", 
-    uri : "...", 
-    headers:  "...", 
-    body :"...", 
+    //method and url formation here
+    method: stringSplit[0].split(" ")[0], 
+    uri : stringSplit[0].split(" ")[1], 
+    headers:  headersFromStr, 
+    body : bodyFromString, 
   }; 
 }
 
