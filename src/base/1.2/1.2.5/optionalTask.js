@@ -14,8 +14,35 @@ text = text.concat(`\n${body}`)
    }
    
    function processHttpRequest($method, $uri, $headers, $body) {
-      
-      
+  if($method === 'GET'){
+      try{
+        let path = require('path');
+        if($uri === '/'){
+          let uploadedFile = require("fs").readFileSync("index.html",'utf-8')
+          outputHttpResponse(200,'OK',$headers, uploadedFile)
+        }
+        else if ($headers['Host'] === 'student.shpp.me'){
+          let correctPath = `src\\base\\1.2\\1.2.5\\student${$uri}`
+          let uploadedFile = require("fs").readFileSync(correctPath,'utf-8')
+          outputHttpResponse(200,'OK',$headers, uploadedFile)
+        }
+        else if ($headers['Host'] === 'another.shpp.me'){
+          let correctPath = `src\\base\\1.2\\1.2.5\\another${$uri}`
+          let uploadedFile = require("fs").readFileSync(correctPath,'utf-8')
+          outputHttpResponse(200,'OK',$headers, uploadedFile)
+        }
+        else{
+          outputHttpResponse(404,'Not Found',$headers,'<h1 style="color:red">Not Found</h1>')
+        }
+      }
+      catch(e){
+        outputHttpResponse(404,'Not Found',$headers,'<h1 style="color:red">Not Found</h1>')
+      }
+  }
+  else{
+      outputHttpResponse(400,'Bad Request',$headers,'<h1 style="color:red">Bad Request</h1>')
+  }
+
    }
    
    function parseTcpStringAsHttpRequest($string) {
@@ -56,8 +83,9 @@ function getLogAndPassword(body){
 
    
    http2 = parseTcpStringAsHttpRequest(
-    `POST /api/checkLoginAndPassword HTTP/1.1
+    `GET /testFile.txt HTTP/1.1
     Accept: */*
+    Host: student.shpp.me
     Content-Type: application/x-www-form-urlencoded
     User-Agent: Mozilla/4.0
     Content-Length: 35
@@ -65,5 +93,5 @@ function getLogAndPassword(body){
     login=student&password=12345
     `
    )
-   processHttpRequest(http.method, http.uri, http.headers, http.body);
+   processHttpRequest(http2.method, http2.uri, http2.headers, http2.body);
    
