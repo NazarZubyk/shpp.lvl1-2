@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>task7</title>
+
+    <style>
+        .rectangle{
+            width: 50px;
+            height: 20px;
+            background-color: green;
+            visibility: hidden;
+        }
+    </style>
+</head>
+<body>
+    <div id="rectangle" class="rectangle"></div>
+    <input id="inputField" type="text">
+
+    <script>
+        let rectagle = document.getElementById("rectangle");
+        let field = document.getElementById("inputField")
+
+        field.addEventListener("focus",()=>rectagle.style.visibility = "visible")
+        field.addEventListener("input",()=>rectagle.style.visibility = "hidden")
+    </script>
+</body>
+</html>

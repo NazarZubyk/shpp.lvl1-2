@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>task5</title>
+
+    <style>
+        .yellowSquare{
+            height: 100px;
+            width: 100px;
+            background-color: yellow;
+            visibility: visible;
+        }
+    </style>
+</head>
+<body>
+    <div id="square" class="yellowSquare"></div>
+    <script>
+        let element = document.getElementById("square");
+
+        let countClicks = 0;
+
+        let choiser = function(count,element){
+            console.log(count)
+            if(count===0){
+                
+                alert("Hy");
+            }
+            else{
+                element.style.visibility = "hidden";
+            }
+        }
+        
+            element.addEventListener("click",()=>{choiser(countClicks,element);countClicks++})
+        
+        
+    </script>
+</body>
+</html>
