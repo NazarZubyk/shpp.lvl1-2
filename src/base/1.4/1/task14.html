@@ -6,14 +6,25 @@
     <title>task14</title>
     <style>
         .bottomButton{
-            position: fixed;
-            bottom: 0px;
+            position:relative;
+            top: 100%;
             left: 50%;
-            text
+            font-size: large;
         }
+        html, body { height: 2000px; }
+        
     </style>
 </head>
-<body>
-    <button class="bottomButton" id="up">UP</button>
+<body style="overflow-y:scroll;">
+    <button class="bottomButton" id="up" onclick="scrollUp()">UP</button>
+
+    <script>
+        let scrollUp = function(){
+            window.scrollTo({
+                top: 0,
+                behavior :"smooth"
+            })
+        }
+    </script>
 </body>
 </html>

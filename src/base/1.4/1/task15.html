@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>task15</title>
+    <style>
+        .bigBox{
+            background-color: brown;
+            height: 20%;
+            width: 20%;
+            visibility: visible;
+            position: absolute;
+        }
+        .smallBox{
+            background-color: red;
+            height: 10%;
+            width: 10%;
+            visibility: visible;
+            left: 1%;
+            top: 2%;
+            position: absolute;
+        }
+    </style>
+</head>
+<body>
+    <div id="big" class="bigBox"></div>
+    <div id="small" class="smallBox"></div>
+
+    <script>
+        let big = document.getElementById("big");
+        let small = document.getElementById("small")
+
+        big.addEventListener("click",()=>{alert("Hy from big box")})
+        small.addEventListener("click",()=>{alert("Hy from small box")})
+    </script>
+</body>
+</html>
