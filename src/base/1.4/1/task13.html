@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <input type="text" id="localStorage" style="width: 300px;height: 150px;">
+    <input type="text" id="cookies" style="width: 300px;height: 150px;">
+    <input type="text" id="sessionStorage" style="width: 300px;height: 150px;">
+    <button onclick="localStorage.clear();">clear local storage</button>
+    
+    <script>
+        let localStor = document.getElementById("localStorage");
+        
+        localStor.value = localStorage?.getItem("myStorage")
+        
+        let writeLocalStorage = function(localStor){
+            localStorage.setItem("myStorage",localStor.value)
+        }
+        
+        localStor.addEventListener("focusout", ()=>{writeLocalStorage(localStor)})
+    </script>
+
+    <script>
+        let cookie = document.getElementById("cookies");
+
+        cookie.value = document.cookie;
+
+        let writeCookie = function(localStor){
+            document.cookie = localStor.value;
+    
+        }
+
+        cookie.addEventListener("focusout", ()=>{writeCookie(cookie)})
+    </script>
+
+    <script>
+        let sessionStor = document.getElementById("sessionStorage")
+
+        sessionStor.value = sessionStorage?.getItem("MySessionStorage");
+
+        let writeSessionStorage = function(localStor){
+            sessionStorage.setItem("MySessionStorage",localStor.value)
+    
+        }
+
+        sessionStor.addEventListener("focusout", ()=>{writeSessionStorage(sessionStor)})
+    </script>
+</body>
+</html>

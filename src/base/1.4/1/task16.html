@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>task16</title>
+
+    <style>
+        .grayWindow{
+            background-color: gray;
+            position: absolute;
+            top: 0%;
+            left: 0%;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            opacity: 0.5;  
+            visibility: hidden;
+        }
+        body{
+            height: 2000px;
+        }
+    </style>
+</head>
+<body>
+    <button id="callGrayWindow" onclick="showGrayWindow()">show gray window</button>
+    <div id="grayWindow" class="grayWindow" onclick="hiddenGrayWindow()"></div>
+    <script>
+        let showGrayWindow = function(){
+            let grayBox = document.getElementById("grayWindow")
+            grayBox.style.visibility = "visible";
+            let cord = grayBox.getBoundingClientRect();
+            window.onscroll = function(){window.scrollTo(cord.x,cord.y)}
+        }
+        
+        let hiddenGrayWindow = function(){
+            window.onscroll = ()=>{};
+            let grayBox = document.getElementById("grayWindow")
+            grayBox.style.visibility = "hidden";
+        }
+    </script>
+</body>
+</html>

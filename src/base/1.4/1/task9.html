@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>task9</title>
+</head>
+<body>
+    <textarea name="sources" id="sourcesList" cols="70" rows="10"></textarea>
+    <button id="showImmages">show images</button>
+    <div id="images"></div>
+    <script>
+        let sources = document.getElementById("sourcesList");
+        let showImage = document.getElementById("showImmages")
+
+
+        let showAllImmages = function(sources){
+            
+            let sourceList = sources.value.split("\n");
+
+            for(let i = 0; i < sourceList.length; i++){
+                let element = document.createElement("img");
+                console.log(sourceList[i])
+                element.src = sourceList[i];
+                let parent = document.getElementById("images");
+                parent.appendChild(element);
+            }            
+        }
+
+        showImage.addEventListener("click",()=>showAllImmages(sources));
+    </script>
+</body>
+</html>

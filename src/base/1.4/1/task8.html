@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>task8</title>
+</head>
+<body>
+    <input type="text" name="link" id="linkToImmage">
+    <button id="toLoadImmage">load image</button>
+    <img id="image" src="" alt="uploaded immage">
+
+    <script>
+        let link = document.getElementById("linkToImmage");
+        let toLoadImmage = document.getElementById("toLoadImmage");
+        let image = document.getElementById("image");
+
+        toLoadImmage.addEventListener("click",()=>image.src = link.value)
+
+    </script>
+</body>
+</html>

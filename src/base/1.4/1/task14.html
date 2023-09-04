@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>task14</title>
+    <style>
+        .bottomButton{
+            position:relative;
+            top: 100%;
+            left: 50%;
+            font-size: large;
+        }
+        html, body { height: 2000px; }
+        
+    </style>
+</head>
+<body style="overflow-y:scroll;">
+    <button class="bottomButton" id="up" onclick="scrollUp()">UP</button>
+
+    <script>
+        let scrollUp = function(){
+            window.scrollTo({
+                top: 0,
+                behavior :"smooth"
+            })
+        }
+    </script>
+</body>
+</html>

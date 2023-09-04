@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .blackBlock{
+            background-color: black;
+            margin: 5px;
+            height: 100px;
+            width: 100px;
+        }
+
+        .hidden{
+            visibility: hidden;
+        }
+    </style>
+</head>
+<body>
+    <div id="block" class="blackBlock"></div>
+    <div id="block" class="blackBlock"></div>
+    <div id="block" class="blackBlock"></div>
+    <div id="block" class="blackBlock"></div>
+    <div id="block" class="blackBlock"></div>
+    <br>
+    <button id="button1">hide with CSS</button>
+    <button id="button2">delete with JS</button>
+    <button id="button3">combinate hidden</button>
+
+    <script>
+        const button1 = document.getElementById("button1");
+        const button2 = document.getElementById("button2");
+        const button3 = document.getElementById("button3");
+        let boxList = document.getElementsByClassName("blackBlock");
+        
+
+        let choseFunctionRelativeToHidden = function(elem){            
+            if(elem.className === "blackBlock"){
+                elem.className = "hidden"
+            }
+            else{
+                elem.className = "blackBlock"
+            }
+        }
+
+        let functionForList = function(func, list){
+            if(list.length===0){
+                list = document.getElementsByClassName("hidden");
+            }
+            let trueLength = list.length;
+            for(let i = 0; i< list.length; i++){                              
+                func(list[i]);
+
+                if(trueLength>list.length){
+                    i--;
+                    trueLength--;
+                }
+                
+            }
+        }
+        button1.addEventListener("click", ()=>{functionForList(function(elem){elem.style.display = "none"},boxList)})
+        button2.addEventListener("click", ()=>{functionForList(function(elem){elem.remove()},boxList)})
+        button3.addEventListener("click", () => {functionForList(choseFunctionRelativeToHidden,boxList)})
+
+        
+    </script>
+    
+
+    
+</body>
+</html>
