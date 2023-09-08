@@ -36,8 +36,11 @@ interface abstractPet{
     
 }
 class Pet{
+    protected namePet:string;
+    protected information:any;
     constructor(namePet:string,information:any){
-        
+        this.namePet = namePet;
+        this.information = information;
     }
     name(){
         
@@ -45,8 +48,18 @@ class Pet{
     }
 }
 class Cat extends Pet{
+    protected information: boolean;
+    constructor(namePet:string,information:boolean){
+        super(namePet,information);
+        this.information = information;
+    }
 }
 class Dog extends Pet{
+    protected information: number;
+    constructor(namePet:string,information:number){
+        super(namePet,information);
+        this.information = information;
+    }
 }
 function hey2(abstractPet:abstractPet) {
     return "hey! i'm " + abstractPet.name();
@@ -58,7 +71,7 @@ hey2(b)
 
 // 4.3
 
-function hey(a) {
+function hey(a:{name():string, type: string, cuteness?: number, coolness?:number}) {
     return "hey! i'm " + a.name()
 		 + (a.type === "cat" ? ("cuteness: "+a.cuteness) : ("coolness: "+a.coolness))
 }
@@ -68,7 +81,7 @@ hey({name: () => "vasya", type: "dog", coolness: 100})
 // 5.
 
 // google for Record type
-function stringEntries(a) {
+function stringEntries(a:object) {
    return Array.isArray(a) ? a : Object.keys(a)
 }
 
@@ -77,7 +90,7 @@ function stringEntries(a) {
 // you don't know Promises and async/await yet. Or do you? 
 // ....can be hard, don't worry and SKIP if you do not know how to do it
 
-async function world(a) {
+async function world(a:number): Promise<string>{
     return "*".repeat(a)
 }
 const hello = async () => {
