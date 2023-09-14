@@ -8,7 +8,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.urlRandomName = void 0;
 const urlRandomName = "https://random-data-api.com/api/name/random_name";
+exports.urlRandomName = urlRandomName;
 function method1() {
     return __awaiter(this, void 0, void 0, function* () {
         try {

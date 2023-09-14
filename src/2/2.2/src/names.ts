@@ -75,8 +75,8 @@ async function method3(){
     
 }
 
-//method1().then(()=>{console.log("1--------------------------")});
+method1().then(()=>{console.log("1--------------------------")});
 
-//method2().then(()=>{console.log("2--------------------------")});
+method2().then(()=>{console.log("2--------------------------")});
 method3().then(()=>{console.log("3--------------------------")});
 
