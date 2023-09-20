@@ -5,7 +5,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rm -rf ./dist && tsc",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
+    "myRunServers": "rm -rf ./dist/servers && tsc && node dist/servers/index.js",
+    "myRunClients": "rm -rf ./dist/clients && tsc && node dist/clients/requests.js"
   },
   "author": "Nazar Zubyk",
   "license": "ISC",
