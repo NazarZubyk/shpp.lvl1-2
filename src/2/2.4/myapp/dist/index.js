@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const http_1 = __importDefault(require("http"));
 const cors_1 = __importDefault(require("cors"));
+const express_session_1 = __importDefault(require("express-session"));
 const app = (0, express_1.default)();
 var bodyParser = require('body-parser');
 const portHTTP = 3005;
@@ -14,6 +15,13 @@ const portHTTP = 3005;
 app.use(express_1.default.json());
 app.use((0, cors_1.default)());
 app.use(express_1.default.static('frontend'));
+const FileStore = require('session-file-store')(express_session_1.default);
+app.use((0, express_session_1.default)({
+    store: new FileStore({}),
+    secret: 'someLongSecretKayrjdncijewnfdi3jnd3n5j35n4k32jn4n',
+    resave: true,
+    saveUninitialized: true,
+}));
 http_1.default.createServer(app).listen(portHTTP, () => {
     console.log("start HTTP express server");
 });
@@ -30,11 +38,11 @@ app.post('/api/v1/items', (req, res) => {
     let resJson = JSON.stringify({ id: newItem.id });
     res.send(resJson);
     console.log(`post with id:${newItem.id}`);
+    console.log(req.sessionID);
     idCount++;
 });
 app.put('/api/v1/items', (req, res) => {
     let reqBody = req.body;
-    console.log(reqBody);
     let indexForUpdate = items.findIndex(item => item.id === reqBody.id);
     if (indexForUpdate !== -1) {
         items[indexForUpdate] = reqBody;
@@ -47,7 +55,33 @@ app.put('/api/v1/items', (req, res) => {
     console.log('put');
 });
 app.delete('/api/v1/items', (req, res) => {
+    let reqBody = req.body;
+    let indexForUpdate = items.findIndex(item => item.id === reqBody.id);
+    if (indexForUpdate !== -1) {
+        //delete item here by index
+        items.splice(indexForUpdate, 1);
+        res.send({ "ok": true });
+    }
+    else {
+        res.status(404);
+    }
     console.log('delete/');
+});
+app.post('/api/v1/login', (req, res) => {
+    var _a, _b;
+    console.log(req.session);
+    let log = (_a = req.body) === null || _a === void 0 ? void 0 : _a.login;
+    let password = (_b = req.body) === null || _b === void 0 ? void 0 : _b.pass;
+    FileStore;
+});
+app.post('/api/v1/register', (req, res) => {
+    res.send({ "ok": true });
+});
+app.post('/api/v1/logout', (req, res) => {
+    req.session.destroy((err) => {
+        console.log(err);
+    });
+    res.send({ 'ok': true });
 });
 function createNewItem(id, text, checked) {
     let newItem = new item(id, text, checked);

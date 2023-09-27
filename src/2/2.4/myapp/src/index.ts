@@ -1,6 +1,8 @@
 import express from 'express'
 import http from 'http'
 import cors from 'cors'
+import user from './user'
+import session from 'express-session'
 
 
 const app = express()
@@ -15,12 +17,23 @@ app.use(express.json());
 app.use(cors())
 app.use(express.static('frontend'))
 
+    const FileStore = require('session-file-store')(session);
+    app.use(session({
+        store: new FileStore({}),
+        secret: 'someLongSecretKayrjdncijewnfdi3jnd3n5j35n4k32jn4n',
+        resave: true,
+        saveUninitialized: true,
+        
+    }));
+
 http.createServer(app).listen(portHTTP,()=>{
   console.log("start HTTP express server")
 })
-
+ 
 let idCount:number = 1;
 let items: item[] = [];
+
+
 
 app.get('/api/v1/items', (req, res)=>{
     let resJson = {items:items.map(item=>({id:item.id,text:item.text,checked: item.checked}))}
@@ -36,6 +49,7 @@ app.post('/api/v1/items', (req, res)=>{
     res.send(resJson)
 
     console.log(`post with id:${newItem.id}`)
+    console.log(req.sessionID)
     idCount++;
 })
 
@@ -60,6 +74,7 @@ app.delete('/api/v1/items', (req, res)=>{
 
     if(indexForUpdate !== -1){
         //delete item here by index
+        items.splice(indexForUpdate,1);
         res.send({ "ok" : true })
     }
     else{
@@ -68,6 +83,26 @@ app.delete('/api/v1/items', (req, res)=>{
     console.log('delete/')
 })
 
+
+app.post('/api/v1/login',(req,res)=>{
+    console.log(req.session)
+    let log = req.body?.login;
+    let password = req.body?.pass;
+
+    FileStore
+    
+})
+
+app.post('/api/v1/register',(req,res)=>{  
+    res.send({"ok":true})   
+})
+
+app.post('/api/v1/logout',(req,res)=>{
+    req.session.destroy((err)=>{
+        console.log(err)
+    })
+    res.send({'ok':true})
+})
 
 function createNewItem(id:number,text:string,checked:boolean){
     let newItem = new item(id, text, checked);
