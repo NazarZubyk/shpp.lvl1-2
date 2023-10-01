@@ -75,6 +75,17 @@ app.post('/api/v1/login', (req, res) => {
     FileStore;
 });
 app.post('/api/v1/register', (req, res) => {
+    var _a, _b;
+    const fs = require('fs');
+    let login = (_a = req.body) === null || _a === void 0 ? void 0 : _a.login;
+    let password = (_b = req.body) === null || _b === void 0 ? void 0 : _b.password;
+    fs.writeFile('users/bd.txt', login + " " + password, (err) => {
+        if (err)
+            throw err;
+        else {
+            console.log("The file is updated with the given data");
+        }
+    });
     res.send({ "ok": true });
 });
 app.post('/api/v1/logout', (req, res) => {
@@ -95,3 +106,5 @@ class item {
         this.checked = checked;
     }
 }
+const mongoose_1 = __importDefault(require("mongoose"));
+mongoose_1.default.connect('mongodb://127.0.0.1:3006');

@@ -3,6 +3,7 @@ import http from 'http'
 import cors from 'cors'
 import user from './user'
 import session from 'express-session'
+import { Request, Response } from 'express';
 
 
 const app = express()
@@ -35,12 +36,12 @@ let items: item[] = [];
 
 
 
-app.get('/api/v1/items', (req, res)=>{
+app.get('/api/v1/items', (req : Request, res: Response)=>{
     let resJson = {items:items.map(item=>({id:item.id,text:item.text,checked: item.checked}))}
     res.send( resJson )    
 })
 
-app.post('/api/v1/items', (req, res)=>{
+app.post('/api/v1/items', (req: Request, res: Response)=>{
     let bodyReq:{text:string} = req.body;
     console.log(bodyReq.text)
     let newItem = createNewItem(idCount,bodyReq.text,false)
@@ -53,7 +54,7 @@ app.post('/api/v1/items', (req, res)=>{
     idCount++;
 })
 
-app.put('/api/v1/items', (req, res)=>{
+app.put('/api/v1/items', (req: Request, res: Response)=>{
     let reqBody = req.body;
     let indexForUpdate = items.findIndex(item=> item.id === reqBody.id) 
 
@@ -68,7 +69,7 @@ app.put('/api/v1/items', (req, res)=>{
     console.log('put')
 })
 
-app.delete('/api/v1/items', (req, res)=>{
+app.delete('/api/v1/items', (req: Request, res: Response)=>{
     let reqBody = req.body;
     let indexForUpdate = items.findIndex(item=> item.id === reqBody.id) 
 
@@ -84,7 +85,7 @@ app.delete('/api/v1/items', (req, res)=>{
 })
 
 
-app.post('/api/v1/login',(req,res)=>{
+app.post('/api/v1/login',(req: Request,res: Response)=>{
     console.log(req.session)
     let log = req.body?.login;
     let password = req.body?.pass;
@@ -93,11 +94,21 @@ app.post('/api/v1/login',(req,res)=>{
     
 })
 
-app.post('/api/v1/register',(req,res)=>{  
+app.post('/api/v1/register',(req: Request,res: Response)=>{  
+    const fs = require('fs')
+    let login = req.body?.login;
+    let password = req.body?.password;
+    fs.writeFile('users/bd.txt', login+" "+password, (err:Error) => {
+        if (err) throw err;
+        else{
+            console.log("The file is updated with the given data")
+        }
+    })
+
     res.send({"ok":true})   
 })
 
-app.post('/api/v1/logout',(req,res)=>{
+app.post('/api/v1/logout',(req: Request,res: Response)=>{
     req.session.destroy((err)=>{
         console.log(err)
     })
@@ -121,3 +132,5 @@ class item {
         }
 }
 
+import mongoose from 'mongoose'
+mongoose.connect('mongodb://127.0.0.1:3006');
