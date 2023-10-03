@@ -107,4 +107,4 @@ class item {
     }
 }
 const mongoose_1 = __importDefault(require("mongoose"));
-mongoose_1.default.connect('mongodb://127.0.0.1:3006');
+mongoose_1.default.connect('mongodb://127.0.0.1:32768/test');

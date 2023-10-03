@@ -1,6 +1,9 @@
-class User {
-    email: string = '';
-    password: string = ''
-}
+import mongoose from "mongoose";
+import { Task } from "./types";
+const userSchema = new mongoose.Schema({
+    login : String,
+    password : String,
+    tasks: []  as unknown as [Task]
+})
 
-export = User;
+module.exports = mongoose.model('User', userSchema)

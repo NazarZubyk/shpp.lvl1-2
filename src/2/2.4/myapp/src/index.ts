@@ -1,14 +1,25 @@
 import express from 'express'
 import http from 'http'
 import cors from 'cors'
-import user from './user'
 import session from 'express-session'
 import { Request, Response } from 'express';
+import { Task } from './types';
 
-
+const mongoURL = 'mongodb://127.0.0.1:32768';
 const app = express()
-var bodyParser = require('body-parser')
 const portHTTP = 3005;
+
+//mongo part------------------------------
+import mongoose from "mongoose";
+const User = require('./user')
+
+mongoose.connect(mongoURL);
+
+async function addNewUserToBD(login: String, password: String, tasks:[Task]) {
+    const user = await new User({login, password, tasks})
+    console.log(`adds new user - ${user}`)
+}
+//----------------------------------------
 
 
 //http server------------------------------------------------------
@@ -95,15 +106,12 @@ app.post('/api/v1/login',(req: Request,res: Response)=>{
 })
 
 app.post('/api/v1/register',(req: Request,res: Response)=>{  
-    const fs = require('fs')
-    let login = req.body?.login;
-    let password = req.body?.password;
-    fs.writeFile('users/bd.txt', login+" "+password, (err:Error) => {
-        if (err) throw err;
-        else{
-            console.log("The file is updated with the given data")
-        }
-    })
+    
+    const login = req.body?.login;
+    const password = req.body?.password;
+    const tasks = [] as unknown as [Task]
+
+    addNewUserToBD(login,password,tasks)
 
     res.send({"ok":true})   
 })
@@ -132,5 +140,4 @@ class item {
         }
 }
 
-import mongoose from 'mongoose'
-mongoose.connect('mongodb://127.0.0.1:3006');
+
