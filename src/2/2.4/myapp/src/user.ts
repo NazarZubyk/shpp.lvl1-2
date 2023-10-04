@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { Task } from "./types";
+
 const userSchema = new mongoose.Schema({
     login : String,
     password : String,

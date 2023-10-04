@@ -16,9 +16,20 @@ const User = require('./user')
 mongoose.connect(mongoURL);
 
 async function addNewUserToBD(login: String, password: String, tasks:[Task]) {
-    const user = await new User({login, password, tasks})
+    const some:[] = await User.find({login:login}).exec();
+    
+    if(some.length != 0){
+        
+        console.log("assssssssssssss")
+    }else{
+        console.log("somesing new --------------------------------------------")
+    }
+    const user = await User.create({login, password, tasks})
     console.log(`adds new user - ${user}`)
+    
 }
+
+
 //----------------------------------------
 
 
@@ -97,19 +108,20 @@ app.delete('/api/v1/items', (req: Request, res: Response)=>{
 
 
 app.post('/api/v1/login',(req: Request,res: Response)=>{
-    console.log(req.session)
-    let log = req.body?.login;
-    let password = req.body?.pass;
-
-    FileStore
+    
     
 })
 
 app.post('/api/v1/register',(req: Request,res: Response)=>{  
     
+     
+
     const login = req.body?.login;
-    const password = req.body?.password;
+    const password = req.body?.pass;
+    console.log(`log + ${login}, pas - ${password}`)
     const tasks = [] as unknown as [Task]
+
+    
 
     addNewUserToBD(login,password,tasks)
 

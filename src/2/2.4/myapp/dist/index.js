@@ -1,4 +1,13 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -7,9 +16,27 @@ const express_1 = __importDefault(require("express"));
 const http_1 = __importDefault(require("http"));
 const cors_1 = __importDefault(require("cors"));
 const express_session_1 = __importDefault(require("express-session"));
+const mongoURL = 'mongodb://127.0.0.1:32768';
 const app = (0, express_1.default)();
-var bodyParser = require('body-parser');
 const portHTTP = 3005;
+//mongo part------------------------------
+const mongoose_1 = __importDefault(require("mongoose"));
+const User = require('./user');
+mongoose_1.default.connect(mongoURL);
+function addNewUserToBD(login, password, tasks) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const some = yield User.find({ login: login }).exec();
+        if (some.length != 0) {
+            console.log("assssssssssssss");
+        }
+        else {
+            console.log("somesing new --------------------------------------------");
+        }
+        const user = yield User.create({ login, password, tasks });
+        console.log(`adds new user - ${user}`);
+    });
+}
+//----------------------------------------
 //http server------------------------------------------------------
 //need for correct procession of json
 app.use(express_1.default.json());
@@ -68,24 +95,14 @@ app.delete('/api/v1/items', (req, res) => {
     console.log('delete/');
 });
 app.post('/api/v1/login', (req, res) => {
-    var _a, _b;
-    console.log(req.session);
-    let log = (_a = req.body) === null || _a === void 0 ? void 0 : _a.login;
-    let password = (_b = req.body) === null || _b === void 0 ? void 0 : _b.pass;
-    FileStore;
 });
 app.post('/api/v1/register', (req, res) => {
     var _a, _b;
-    const fs = require('fs');
-    let login = (_a = req.body) === null || _a === void 0 ? void 0 : _a.login;
-    let password = (_b = req.body) === null || _b === void 0 ? void 0 : _b.password;
-    fs.writeFile('users/bd.txt', login + " " + password, (err) => {
-        if (err)
-            throw err;
-        else {
-            console.log("The file is updated with the given data");
-        }
-    });
+    const login = (_a = req.body) === null || _a === void 0 ? void 0 : _a.login;
+    const password = (_b = req.body) === null || _b === void 0 ? void 0 : _b.pass;
+    console.log(`log + ${login}, pas - ${password}`);
+    const tasks = [];
+    addNewUserToBD(login, password, tasks);
     res.send({ "ok": true });
 });
 app.post('/api/v1/logout', (req, res) => {
@@ -106,5 +123,3 @@ class item {
         this.checked = checked;
     }
 }
-const mongoose_1 = __importDefault(require("mongoose"));
-mongoose_1.default.connect('mongodb://127.0.0.1:32768/test');
