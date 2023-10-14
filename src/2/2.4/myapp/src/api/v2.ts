@@ -3,52 +3,53 @@ import { addItems, deleteItem, editItems, getItems, toLogin, toLogout, toRegiste
 
 const router = express.Router();
 
-try {
-    router.route('/items').all(
+
+    router.route('/items').all()
+        
+            
         const action = req.query.action;
         console.log(action) 
-    )
+    
     const action = req.query.action;
     console.log(action)
-    if(!action){
-        res.status(400).json( { "error": "bad request" } ); 
-    }
+    
 
     switch(action){
         case 'login':
             {
-                await toLogin(req,res);
+                toLogin;
                 break;
             }
         case 'logout':{
-                await toLogout(req,res);
+                toLogout;
                 break
             }
         case 'register':{
-                await toRegister(req,res);
+                toRegister;
                 break;
             }
         case 'getItems':{
-                await getItems(req,res);
+                getItems;
                 break;
             }    
         case 'deleteItem':{
-                await deleteItem(req,res);
+                deleteItem;
                 break;
             }   
         case 'addItem':{
-                await addItems(req,res)
+                addItems;
                 break;
             }   
         case 'editItem':{
-                await editItems(req,res);
+                editItems;
                 break;
             }
-        
     }
-} catch (error) {
+    
+ catch (error) {
     console.error(error) 
 }
+
 
 
 export default router;
