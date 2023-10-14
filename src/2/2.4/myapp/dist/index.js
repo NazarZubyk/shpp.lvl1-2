@@ -11,30 +11,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+var _a, _b, _c, _d, _e, _f, _g, _h;
 Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
 const http_1 = __importDefault(require("http"));
 const cors_1 = __importDefault(require("cors"));
 const express_session_1 = __importDefault(require("express-session"));
+const express_1 = __importDefault(require("express"));
+const express_validator_1 = require("express-validator");
+const v1_1 = __importDefault(require("./api/v1"));
+const actions_1 = require("./actions");
 const mongoURL = 'mongodb://127.0.0.1:32768';
 const app = (0, express_1.default)();
 const portHTTP = 3005;
 //mongo part------------------------------
 const mongoose_1 = __importDefault(require("mongoose"));
-const User = require('./user');
 mongoose_1.default.connect(mongoURL);
-function addNewUserToBD(login, password, tasks) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const doubledLogin = yield User.find({ login: login }).exec();
-        if (doubledLogin.length != 0) {
-            console.log("login already registered");
-        }
-        else {
-            const user = yield User.create({ login, password, tasks });
-            console.log(`adds new user - ${user}`);
-        }
-    });
-}
 //----------------------------------------
 //http server------------------------------------------------------
 //need for correct procession of json
@@ -53,175 +44,129 @@ app.use((0, express_session_1.default)({
 http_1.default.createServer(app).listen(portHTTP, () => {
     console.log("start HTTP express server");
 });
-app.get('/api/v1/items', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    if (req.session.user === undefined) {
-        if (!req.session.tasks) {
-            req.session.tasks = [];
-        }
-        if (!req.session.uniqueCaunt) {
-            req.session.uniqueCaunt = 1;
-        }
-        let resJson = { items: req.session.tasks };
-        res.send(resJson);
-    }
-    else {
-        try {
-            const user = yield User.findOne({ login: req.session.user }).exec();
-            if (user) {
-                const resJson = { items: user.tasks };
-                res.send(resJson);
-            }
-            else {
-                res.status(404);
-            }
-        }
-        catch (error) {
-            console.error(error);
-        }
-    }
-}));
-app.post('/api/v1/items', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    if (req.session.user === undefined) {
-        const bodyReq = req.body;
-        if (!req.session.tasks) {
-            req.session.tasks = [];
-        }
-        if (!req.session.uniqueCaunt) {
-            req.session.uniqueCaunt = 1;
-        }
-        const newTask = {
-            id: req.session.uniqueCaunt,
-            text: bodyReq.text,
-            checked: false
-        };
-        req.session.tasks.push(newTask);
-        req.session.uniqueCaunt++;
-        const resJson = JSON.stringify({ id: newTask.id });
-        res.send(resJson);
-        console.log(`adds new task with id:${newTask.id}`);
-    }
-    else {
-        const user = yield User.findOne({ login: req.session.user }).exec();
-        if (!user.lastUniqueCount) {
-            user.lastUniqueCount = 1;
-        }
-        const bodyReq = req.body;
-        const newTask = {
-            id: user.lastUniqueCount,
-            text: bodyReq.text,
-            checked: false
-        };
-        if (user) {
-            user.tasks.push(newTask);
-            user.lastUniqueCount++;
-            yield user.save();
-            const resJson = JSON.stringify({ id: newTask.id });
-            res.send(resJson);
-        }
-        else {
-            res.status(404);
-        }
-    }
-}));
-app.put('/api/v1/items', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
-    const reqBody = req.body;
-    if (req.session.user === undefined) {
-        const indexForUpdate = (_a = req.session.tasks) === null || _a === void 0 ? void 0 : _a.findIndex(task => task.id === reqBody.id);
-        if (indexForUpdate !== -1 && req.session.tasks !== undefined && indexForUpdate !== undefined) {
-            req.session.tasks[indexForUpdate] = reqBody;
-            res.send({ "ok": true });
-        }
-        else {
-            res.status(404);
-        }
-        console.log('put');
-    }
-    else {
-        const user = yield User.findOne({ login: req.session.user }).exec();
-        if (user) {
-            const indexForUpdate = user.tasks.findIndex(task => task.id === reqBody.id);
-            user.tasks[indexForUpdate] = reqBody;
-            yield user.save();
-            res.send({ "ok": true });
-        }
-        else {
-            res.status(404);
-        }
-    }
-}));
-app.delete('/api/v1/items', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _b;
-    const reqBody = req.body;
-    if (req.session.user === undefined) {
-        const indexForUpdate = (_b = req.session.tasks) === null || _b === void 0 ? void 0 : _b.findIndex(task => task.id === reqBody.id);
-        if (indexForUpdate !== -1 && req.session.tasks !== undefined && indexForUpdate !== undefined) {
-            req.session.tasks.splice(indexForUpdate, 1);
-            res.send({ "ok": true });
-        }
-        else {
-            res.status(404);
-        }
-        console.log('deleted');
-    }
-    else {
-        const user = yield User.findOne({ login: req.session.user }).exec();
-        const indexForUpdate = user.tasks.findIndex(task => task.id === reqBody.id);
-        console.log("index - " + indexForUpdate);
-        if (indexForUpdate !== -1 && indexForUpdate !== undefined) {
-            console.log("list - " + user.tasks);
-            user.tasks.splice(indexForUpdate, 1);
-            console.log("list after - " + user.tasks);
-            yield user.save();
-            res.send({ "ok": true });
-        }
-        else {
-            res.status(404);
-        }
-    }
-}));
-app.post('/api/v1/login', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _c, _d;
-    const login = (_c = req.body) === null || _c === void 0 ? void 0 : _c.login;
-    const password = (_d = req.body) === null || _d === void 0 ? void 0 : _d.pass;
-    const user = yield User.find({ login: login });
-    if (!user) {
-        return res.status(401).json({ message: 'Invalid login credentials' });
-    }
-    if (password === user[0].password) {
-        req.session.user = user[0].login;
-        res.send({ "ok": true });
-    }
-    else {
-        console.log("password was not true");
-    }
-}));
-app.post('/api/v1/register', (req, res) => {
-    var _a, _b;
-    const login = (_a = req.body) === null || _a === void 0 ? void 0 : _a.login;
-    const password = (_b = req.body) === null || _b === void 0 ? void 0 : _b.pass;
-    const tasks = [];
-    addNewUserToBD(login, password, tasks);
-    res.send({ "ok": true });
-});
-app.post('/api/v1/logout', (req, res) => {
-    req.session.destroy((err) => {
-        console.log(err);
-    });
-    res.send({ 'ok': true });
-});
-// function createNewItem(id:number,text:string,checked:boolean){
-//     let newItem = new item(id, text, checked);
-//     items.push(newItem);
-//     return newItem;
-// }
-// class item {
-//     id: number;
-//     text: string;
-//     checked: boolean;
-//         constructor(id:number,text:string,checked:boolean){
-//             this.id = id;
-//             this.text = text;
-//             this.checked = checked
+app.use('/api/v1', v1_1.default);
+// //------------------------------------------------------------------------------------------------
+// app.get('/api/v1/items',async (req : Request, res: Response)=>{
+//     getItems(req,res);    
+// })
+// //------------------------------------------------------------------------------------------------
+// app.post('/api/v1/items',
+// [body('text').notEmpty().isString()] ,
+// async (req: Request, res: Response)=>{
+//     const errors = validationResult(req);
+//         if (!errors.isEmpty()) {
+//             return res.status(400).json( { "error": "bad request" } ); 
 //         }
-// }
+//     addItems(req,res);
+// })
+// //------------------------------------------------------------------------------------------------
+// app.put('/api/v1/items',
+// [
+//     body('text').notEmpty().isString(),
+//     body('id').notEmpty().isNumeric(),
+//     body('checked').notEmpty().isBoolean()
+// ] ,
+//     async (req: Request, res: Response)=>{
+//         const errors = validationResult(req);
+//         if (!errors.isEmpty()) {
+//             return res.status(400).json( { "error": "bad request" } ); 
+//         }
+//     editItems(req,res);
+// })
+// //------------------------------------------------------------------------------------------------
+// app.delete('/api/v1/items', 
+// [
+//     body('id').notEmpty().isNumeric()
+// ],
+//     async (req: Request, res: Response)=>{
+//     const errors = validationResult(req);
+//     if (!errors.isEmpty()) {
+//         return res.status(400).json( { "error": "bad request" } ); 
+//     }
+//     deleteItem(req,res);
+// })
+// //------------------------------------------------------------------------------------------------
+// //------------------------------------------------------------------------------------------------
+// app.post('/api/v1/login',
+// [
+//     body('login').notEmpty(),
+//     body('pass').notEmpty()
+// ],
+// async (req: Request,res: Response)=>{
+//     const errors = validationResult(req);
+//     if (!errors.isEmpty()) {
+//         return res.status(400).json( { "error": "bad request" } ); 
+//     }  
+//     toLogin(req,res); 
+// })
+// //------------------------------------------------------------------------------------------------
+// app.post('/api/v1/register',[
+//     body('login').notEmpty(),
+//     body('pass').notEmpty()
+// ],
+// (req: Request,res: Response)=>{
+//     const errors = validationResult(req);
+//         if (!errors.isEmpty()) {
+//             return res.status(400).json( { "error": "bad request" } ); 
+//         } 
+//     toRegister(req,res);
+// })
+// //------------------------------------------------------------------------------------------------
+// app.post('/api/v1/logout',(req: Request,res: Response)=>{
+//     toLogout(req,res);
+// })
+app.all('/api/v2/router', [
+    (_a = (0, express_validator_1.body)('login')) === null || _a === void 0 ? void 0 : _a.notEmpty(),
+    (_b = (0, express_validator_1.body)('pass')) === null || _b === void 0 ? void 0 : _b.notEmpty(),
+    (_d = (_c = (0, express_validator_1.body)('id')) === null || _c === void 0 ? void 0 : _c.notEmpty()) === null || _d === void 0 ? void 0 : _d.isNumeric(),
+    (_f = (_e = (0, express_validator_1.body)('text')) === null || _e === void 0 ? void 0 : _e.notEmpty()) === null || _f === void 0 ? void 0 : _f.isString(),
+    (_h = (_g = (0, express_validator_1.body)('checked')) === null || _g === void 0 ? void 0 : _g.notEmpty()) === null || _h === void 0 ? void 0 : _h.isBoolean()
+], (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const errors = (0, express_validator_1.validationResult)(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ "error": "bad request" });
+        }
+        const action = req.query.action;
+        console.log(action);
+        if (!action) {
+            res.status(400).json({ "error": "bad request" });
+        }
+        switch (action) {
+            case 'login':
+                {
+                    yield (0, actions_1.toLogin)(req, res);
+                    break;
+                }
+            case 'logout': {
+                yield (0, actions_1.toLogout)(req, res);
+                break;
+            }
+            case 'register': {
+                yield (0, actions_1.toRegister)(req, res);
+                break;
+            }
+            case 'getItems': {
+                yield (0, actions_1.getItems)(req, res);
+                break;
+            }
+            case 'deleteItem': {
+                yield (0, actions_1.deleteItem)(req, res);
+                break;
+            }
+            case 'addItem': {
+                yield (0, actions_1.addItems)(req, res);
+                break;
+            }
+            case 'editItem':
+                {
+                    yield (0, actions_1.editItems)(req, res);
+                    break;
+                }
+                defaul: res.status(400).json({ "error": "bad request" });
+        }
+    }
+    catch (error) {
+        res.status(500).json({ "error": "fatal server error in post('/api/v1/logout'" });
+    }
+}));
