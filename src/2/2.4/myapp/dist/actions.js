@@ -216,7 +216,6 @@ function toRegister(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const errors = (0, express_validator_1.validationResult)(req);
-            console.log(errors);
             if (!errors.isEmpty()) {
                 return res.status(400).json({ "error": "bad request" });
             }

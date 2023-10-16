@@ -28,7 +28,7 @@ try {
     ], actions_1.toLogin);
     router.route('/register')
         .post([
-        (0, express_validator_1.body)('login').notEmpty().isEmail(),
+        (0, express_validator_1.body)('login').notEmpty(),
         (0, express_validator_1.body)('pass').notEmpty()
     ], actions_1.toRegister);
     router.route('/logout')

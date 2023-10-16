@@ -4,6 +4,7 @@ import session from 'express-session'
 import express, { Request, Response } from 'express';
 import { body, validationResult } from 'express-validator';
 import routerv1 from './api/v1';
+import routerv2 from './api/v2';
 
 
 import { deleteItem, getItems, addItems, editItems, toLogin, toLogout, toRegister } from './actions';
@@ -44,6 +45,7 @@ http.createServer(app).listen(portHTTP,()=>{
  
 
 app.use('/api/v1', routerv1);
+app.use('/',routerv2)
 
 // //------------------------------------------------------------------------------------------------
 // app.get('/api/v1/items',async (req : Request, res: Response)=>{
@@ -119,60 +121,60 @@ app.use('/api/v1', routerv1);
 //     toLogout(req,res);
 // })
 
-app.all('/api/v2/router', [
-    body('login')?.notEmpty(),
-    body('pass')?.notEmpty(),
-    body('id')?.notEmpty()?.isNumeric(),
-    body('text')?.notEmpty()?.isString(),
-    body('checked')?.notEmpty()?.isBoolean()
-],
-    async (req: Request, res: Response) => {
-    try {
-        const errors = validationResult(req);
-            if (!errors.isEmpty()) {
-                return res.status(400).json( { "error": "bad request" } ); 
-            } 
+// app.all('/api/v2/router', [
+//     body('login')?.notEmpty(),
+//     body('pass')?.notEmpty(),
+//     body('id')?.notEmpty()?.isNumeric(),
+//     body('text')?.notEmpty()?.isString(),
+//     body('checked')?.notEmpty()?.isBoolean()
+// ],
+//     async (req: Request, res: Response) => {
+//     try {
+//         const errors = validationResult(req);
+//             if (!errors.isEmpty()) {
+//                 return res.status(400).json( { "error": "bad request" } ); 
+//             } 
     
-        const action = req.query.action;
-        console.log(action)
-        if(!action){
-            res.status(400).json( { "error": "bad request" } ); 
-        }
+//         const action = req.query.action;
+//         console.log(action)
+//         if(!action){
+//             res.status(400).json( { "error": "bad request" } ); 
+//         }
     
-        switch(action){
-            case 'login':
-                {
-                    await toLogin(req,res);
-                    break;
-                }
-            case 'logout':{
-                    await toLogout(req,res);
-                    break
-                }
-            case 'register':{
-                    await toRegister(req,res);
-                    break;
-                }
-            case 'getItems':{
-                    await getItems(req,res);
-                    break;
-                }    
-            case 'deleteItem':{
-                    await deleteItem(req,res);
-                    break;
-                }   
-            case 'addItem':{
-                    await addItems(req,res)
-                    break;
-                }   
-            case 'editItem':{
-                    await editItems(req,res);
-                    break;
-                }
-            defaul: res.status(400).json( { "error": "bad request" })
-        }
-    } catch (error) {
-        res.status(500).json({ "error": "fatal server error in post('/api/v1/logout'" } )  
-    }
-})
+//         switch(action){
+//             case 'login':
+//                 {
+//                     await toLogin(req,res);
+//                     break;
+//                 }
+//             case 'logout':{
+//                     await toLogout(req,res);
+//                     break
+//                 }
+//             case 'register':{
+//                     await toRegister(req,res);
+//                     break;
+//                 }
+//             case 'getItems':{
+//                     await getItems(req,res);
+//                     break;
+//                 }    
+//             case 'deleteItem':{
+//                     await deleteItem(req,res);
+//                     break;
+//                 }   
+//             case 'addItem':{
+//                     await addItems(req,res)
+//                     break;
+//                 }   
+//             case 'editItem':{
+//                     await editItems(req,res);
+//                     break;
+//                 }
+//             defaul: res.status(400).json( { "error": "bad request" })
+//         }
+//     } catch (error) {
+//         res.status(500).json({ "error": "fatal server error in post('/api/v1/logout'" } )  
+//     }
+// })
 
