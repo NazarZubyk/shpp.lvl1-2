@@ -3,27 +3,25 @@ import { IUserDocument, Task } from './types';
 import { addNewUserToBD } from './mongoDBfunctions';
 import { validationResult } from 'express-validator';
 
-const User = require('./user')
+import session from 'express-session'
 
-declare module 'express-session' {
-    interface SessionData {
-      user?: string;
-      tasks?: [Task] ;
-      uniqueCaunt: number;
-    }
-  }
+//import user shcema
+const User = require('./userForDB')
+
+
 
 
 export async function getItems (req: Request, res: Response){
     try {
+        //validation part
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json( { "error": "bad request" } ); 
-        }
-
+        }  
+        //for unlogged user
         if(req.session.user === undefined){
 
-            if (!req.session.tasks) {
+            if (!req.session?.tasks) {
                 req.session.tasks = [] as unknown as [Task];
             }
 
@@ -35,6 +33,7 @@ export async function getItems (req: Request, res: Response){
             let resJson = JSON.stringify({items:req.session.tasks})
             res.send( resJson ) 
         }
+        //for logged user
         else{        
             const user = await User.findOne({login: req.session.user}).exec();
 
@@ -47,17 +46,20 @@ export async function getItems (req: Request, res: Response){
             }        
         }       
     } catch (error) {
+        console.error(error)
         res.status(500).json({ "error": "fatal server error in get-'/api/v1/items'" } )
     }
 }
 
 export async function addItems(req:Request, res: Response) {
-    try {       
+    try {
+        //validation part       
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json( { "error": "bad request" } ); 
         }
 
+        //for logged user
         if(req.session.user === undefined){
             const bodyReq:{text:string} = req.body;
     
@@ -83,6 +85,7 @@ export async function addItems(req:Request, res: Response) {
     
             console.log(`adds new task with id:${newTask.id}`)
         }
+        //for logged user
         else{
             const user = await User.findOne({login: req.session.user}).exec();
     
@@ -116,14 +119,15 @@ export async function addItems(req:Request, res: Response) {
 }
 
 export async function editItems(req: Request, res: Response) {
-    try {      
+    try {   
+        //validation part   
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json( { "error": "bad request" } ); 
         }
 
         const reqBody = req.body;
-    
+        //for unlogged user
         if(req.session.user === undefined){
             const indexForUpdate = req.session.tasks?.findIndex(task=> task.id === reqBody.id) 
     
@@ -132,10 +136,10 @@ export async function editItems(req: Request, res: Response) {
                 res.send({ "ok" : true })
             }
             else{
-                res.status(404)
-            }
-            console.log('put')
+                res.status(404).json({"message":"item by index cannot be found"})
+            }            
         }
+        //for logged user
         else{
             const user:IUserDocument = await User.findOne({login: req.session.user}).exec();
     
@@ -146,7 +150,7 @@ export async function editItems(req: Request, res: Response) {
                 res.send({ "ok" : true })
             }
             else{
-                res.status(404)
+                res.status(404).json({"message":"item by index cannot be found"})
             }
             
         }
@@ -157,14 +161,15 @@ export async function editItems(req: Request, res: Response) {
 }
 
 export async function deleteItem(req: Request, res: Response) {
-
 try {    
+    //validation part
     const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json( { "error": "bad request" } ); 
         }
 
     const reqBody = req.body;
+    //for unlogged user
     if(req.session.user === undefined){
         
         const indexForUpdate = req.session.tasks?.findIndex(task=> task.id === reqBody.id) 
@@ -174,24 +179,22 @@ try {
             res.send({ "ok" : true })
         }
         else{
-            res.status(404)
+            res.status(404).json({"message":"item by index cannot be found"})
         }
-        console.log('deleted')
     }
+    //for logged user
     else{
         const user:IUserDocument = await User.findOne({login: req.session.user}).exec();
 
         const indexForUpdate = user.tasks.findIndex(task=> task.id === reqBody.id) 
-        console.log("index - " + indexForUpdate)
-        if(indexForUpdate !== -1   && indexForUpdate !== undefined){
-            console.log("list - " + user.tasks);
-            user.tasks.splice(indexForUpdate,1);
-            console.log("list after - " + user.tasks);
+
+        if(indexForUpdate !== -1   && indexForUpdate !== undefined){            
+            user.tasks.splice(indexForUpdate,1);            
             await user.save();
             res.send({ "ok" : true })
         }
         else{
-            res.status(404)
+            res.status(404).json({"message":"item by index cannot be found"})
         }      
     }
 } catch (error) {
@@ -201,8 +204,8 @@ try {
 }
 
 export async function toLogin(req: Request, res: Response) {
-
 try {
+    //validation part
     const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json( { "error": "bad request" } ); 
@@ -222,8 +225,7 @@ try {
         res.send({"ok":true})   
     }
     else{
-        console.log("password was not true")
-
+        res.status(401).json({"error":"wrong password"})
     }
 } catch (error) {
     res.status(500).json({ "error": "fatal server error in post('/api/v1/login'" } )
@@ -233,6 +235,7 @@ try {
 
 export async function toRegister(req: Request, res: Response) {
     try {  
+        //validation part
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json( { "error": "bad request" } ); 
@@ -255,6 +258,7 @@ export async function toRegister(req: Request, res: Response) {
 
 export async function toLogout(req: Request, res:Response) {
     try {
+        //validation part
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json( { "error": "bad request" } ); 

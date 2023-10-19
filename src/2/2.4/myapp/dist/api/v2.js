@@ -16,7 +16,6 @@ const express_1 = __importDefault(require("express"));
 const actions_1 = require("../actions");
 const express_validator_1 = require("express-validator");
 const router2 = express_1.default.Router();
-router2;
 router2.all('/api/v2/router', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const action = req.query.action;
@@ -36,7 +35,6 @@ router2.all('/api/v2/router', (req, res) => __awaiter(void 0, void 0, void 0, fu
                 break;
             }
             case 'register': {
-                //you can adds more validators like isEmail()
                 yield (0, express_validator_1.check)('login').notEmpty().run(req);
                 yield (0, express_validator_1.check)('pass').notEmpty().run(req);
                 yield (0, actions_1.toRegister)(req, res);
@@ -73,3 +71,4 @@ router2.all('/api/v2/router', (req, res) => __awaiter(void 0, void 0, void 0, fu
     }
 }));
 exports.default = router2;
+//# sourceMappingURL=v2.js.map

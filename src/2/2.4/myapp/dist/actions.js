@@ -12,16 +12,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.toLogout = exports.toRegister = exports.toLogin = exports.deleteItem = exports.editItems = exports.addItems = exports.getItems = void 0;
 const mongoDBfunctions_1 = require("./mongoDBfunctions");
 const express_validator_1 = require("express-validator");
-const User = require('./user');
+const User = require('./userForDB');
 function getItems(req, res) {
+    var _a, _b, _c;
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const errors = (0, express_validator_1.validationResult)(req);
             if (!errors.isEmpty()) {
                 return res.status(400).json({ "error": "bad request" });
             }
-            if (req.session.user === undefined) {
-                if (!req.session.tasks) {
+            console.log((_a = req.session) === null || _a === void 0 ? void 0 : _a.user);
+            if (((_b = req.session) === null || _b === void 0 ? void 0 : _b.user) === undefined) {
+                if (!((_c = req.session) === null || _c === void 0 ? void 0 : _c.tasks)) {
                     req.session.tasks = [];
                 }
                 if (!req.session.uniqueCaunt) {
@@ -42,6 +44,7 @@ function getItems(req, res) {
             }
         }
         catch (error) {
+            console.error(error);
             res.status(500).json({ "error": "fatal server error in get-'/api/v1/items'" });
         }
     });
@@ -118,9 +121,8 @@ function editItems(req, res) {
                     res.send({ "ok": true });
                 }
                 else {
-                    res.status(404);
+                    res.status(404).json({ "message": "item by index cannot be found" });
                 }
-                console.log('put');
             }
             else {
                 const user = yield User.findOne({ login: req.session.user }).exec();
@@ -131,7 +133,7 @@ function editItems(req, res) {
                     res.send({ "ok": true });
                 }
                 else {
-                    res.status(404);
+                    res.status(404).json({ "message": "item by index cannot be found" });
                 }
             }
         }
@@ -157,23 +159,19 @@ function deleteItem(req, res) {
                     res.send({ "ok": true });
                 }
                 else {
-                    res.status(404);
+                    res.status(404).json({ "message": "item by index cannot be found" });
                 }
-                console.log('deleted');
             }
             else {
                 const user = yield User.findOne({ login: req.session.user }).exec();
                 const indexForUpdate = user.tasks.findIndex(task => task.id === reqBody.id);
-                console.log("index - " + indexForUpdate);
                 if (indexForUpdate !== -1 && indexForUpdate !== undefined) {
-                    console.log("list - " + user.tasks);
                     user.tasks.splice(indexForUpdate, 1);
-                    console.log("list after - " + user.tasks);
                     yield user.save();
                     res.send({ "ok": true });
                 }
                 else {
-                    res.status(404);
+                    res.status(404).json({ "message": "item by index cannot be found" });
                 }
             }
         }
@@ -202,7 +200,7 @@ function toLogin(req, res) {
                 res.send({ "ok": true });
             }
             else {
-                console.log("password was not true");
+                res.status(401).json({ "error": "wrong password" });
             }
         }
         catch (error) {
@@ -249,3 +247,4 @@ function toLogout(req, res) {
     });
 }
 exports.toLogout = toLogout;
+//# sourceMappingURL=actions.js.map

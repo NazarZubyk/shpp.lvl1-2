@@ -1,6 +1,6 @@
 import { Task } from "./types";
 
-const User = require('./user')
+const User = require('./userForDB')
 
 export async function addNewUserToBD(login: String, password: String, tasks:[Task]) { 
 

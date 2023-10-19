@@ -1,11 +1,10 @@
 import express, { Request, Response } from 'express';
 import { addItems, deleteItem, editItems, getItems, toLogin, toLogout, toRegister } from "../actions";
-import { Result, ValidationChain, ValidationError, body, check, validationResult } from 'express-validator';
-import { MyError } from '../types';
+import {  check } from 'express-validator';
+
 
 const router2 = express.Router();
 
-    router2
     router2.all('/api/v2/router',
     async (req : Request, res : Response)=>{
         try {
@@ -69,6 +68,6 @@ const router2 = express.Router();
         }
         
     
-        })
+    })
     
 export default router2;

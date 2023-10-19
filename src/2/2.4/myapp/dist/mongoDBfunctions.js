@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.addNewUserToBD = void 0;
-const User = require('./user');
+const User = require('./userForDB');
 function addNewUserToBD(login, password, tasks) {
     return __awaiter(this, void 0, void 0, function* () {
         const doubledLogin = yield User.find({ login: login }).exec();
@@ -24,3 +24,4 @@ function addNewUserToBD(login, password, tasks) {
     });
 }
 exports.addNewUserToBD = addNewUserToBD;
+//# sourceMappingURL=mongoDBfunctions.js.map
