@@ -14,16 +14,15 @@ const mongoDBfunctions_1 = require("./mongoDBfunctions");
 const express_validator_1 = require("express-validator");
 const User = require('./userForDB');
 function getItems(req, res) {
-    var _a, _b, _c;
+    var _a;
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const errors = (0, express_validator_1.validationResult)(req);
             if (!errors.isEmpty()) {
                 return res.status(400).json({ "error": "bad request" });
             }
-            console.log((_a = req.session) === null || _a === void 0 ? void 0 : _a.user);
-            if (((_b = req.session) === null || _b === void 0 ? void 0 : _b.user) === undefined) {
-                if (!((_c = req.session) === null || _c === void 0 ? void 0 : _c.tasks)) {
+            if (req.session.user === undefined) {
+                if (!((_a = req.session) === null || _a === void 0 ? void 0 : _a.tasks)) {
                     req.session.tasks = [];
                 }
                 if (!req.session.uniqueCaunt) {
@@ -192,15 +191,17 @@ function toLogin(req, res) {
             const login = (_a = req.body) === null || _a === void 0 ? void 0 : _a.login;
             const password = (_b = req.body) === null || _b === void 0 ? void 0 : _b.pass;
             const user = yield User.find({ login: login });
-            if (!user) {
-                return res.status(401).json({ message: 'Invalid login credentials' });
-            }
-            if (password === user[0].password) {
-                req.session.user = user[0].login;
-                res.send({ "ok": true });
+            if (Number(user.length) === 0) {
+                res.status(401).json({ message: 'Invalid login' });
             }
             else {
-                res.status(401).json({ "error": "wrong password" });
+                if (password === user[0].password) {
+                    req.session.user = user[0].login;
+                    res.send({ "ok": true });
+                }
+                else {
+                    res.status(401).json({ "error": "wrong password" });
+                }
             }
         }
         catch (error) {

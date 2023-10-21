@@ -13,18 +13,20 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const configuration_1 = require("./configuration");
 const FileStore = require('session-file-store')(express_session_1.default);
 const app = (0, express_1.default)();
+app.use((0, cors_1.default)({
+    origin: 'http://localhost:8000',
+    credentials: true,
+}));
 mongoose_1.default.connect(configuration_1.mongoURL);
 app.use(express_1.default.json());
-app.use((0, cors_1.default)());
-app.use('/api/v1', v1_1.default);
-app.use('/', v2_1.default);
-app.use(express_1.default.static('frontend'));
 app.use((0, express_session_1.default)({
     store: new FileStore({}),
     secret: 'fwefweeeeeeeeeeeeeeeeeeee',
     resave: true,
     saveUninitialized: true,
 }));
+app.use('/api/v1', v1_1.default);
+app.use('/', v2_1.default);
 http_1.default.createServer(app).listen(configuration_1.portHTTP, () => {
     console.log("start HTTP express server");
 });

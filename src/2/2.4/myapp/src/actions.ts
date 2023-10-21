@@ -3,7 +3,7 @@ import { IUserDocument, Task } from './types';
 import { addNewUserToBD } from './mongoDBfunctions';
 import { validationResult } from 'express-validator';
 
-import session from 'express-session'
+
 
 //import user shcema
 const User = require('./userForDB')
@@ -18,6 +18,8 @@ export async function getItems (req: Request, res: Response){
         if (!errors.isEmpty()) {
             return res.status(400).json( { "error": "bad request" } ); 
         }  
+        
+        
         //for unlogged user
         if(req.session.user === undefined){
 
@@ -210,23 +212,23 @@ try {
         if (!errors.isEmpty()) {
             return res.status(400).json( { "error": "bad request" } ); 
         }
-       
     const login = req.body?.login;
     const password = req.body?.pass;
-
     const user:[IUserDocument] = await User.find({login:login})
-    
-    if(!user){
-        return res.status(401).json({ message: 'Invalid login credentials' });
-    }
-    
-    if(password === user[0].password){
-        req.session.user = user[0].login;
-        res.send({"ok":true})   
+   
+    if(Number(user.length) === 0){
+        res.status(401).json({ message: 'Invalid login' });
     }
     else{
-        res.status(401).json({"error":"wrong password"})
+        if(password === user[0].password){
+            req.session.user = user[0].login;
+            res.send({"ok":true})   
+        }
+        else{
+            res.status(401).json({"error":"wrong password"})
+        }
     }
+    
 } catch (error) {
     res.status(500).json({ "error": "fatal server error in post('/api/v1/login'" } )
 }
