@@ -44,7 +44,9 @@ export async function getItems (req: Request, res: Response){
                 res.send(resJson)
             }
             else{
+                req.session.user = undefined;
                 res.status(404).json({"error": `cannot finde ${req.session.user} in datdbase`})
+                
             }        
         }       
     } catch (error) {
@@ -90,11 +92,11 @@ export async function addItems(req:Request, res: Response) {
         //for logged user
         else{
             const user = await User.findOne({login: req.session.user}).exec();
-    
+            console.log(req.body.text)
             if (!user.lastUniqueCount) {
                 user.lastUniqueCount = 1;
             }
-    
+            
             const bodyReq:{text:string} = req.body;
             const newTask: Task = {
                 id: user.lastUniqueCount,

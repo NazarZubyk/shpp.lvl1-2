@@ -7,6 +7,7 @@ import routerv2 from './api/v2';
 import mongoose from "mongoose";
 import { mongoURL, portHTTP } from './configuration';
 import { Task } from './types';
+import { error } from 'console';
 
 
 //filestore for sessions
@@ -19,8 +20,12 @@ app.use(cors({
    }))
 
 //mongo part------------------------------
+if (mongoURL === undefined) {
+  console.error('Cannot connect to the database.');
+} else {
+  mongoose.connect(mongoURL);
+}
 
-mongoose.connect(mongoURL);
 
 //----------------------------------------
 declare module 'express-session' {

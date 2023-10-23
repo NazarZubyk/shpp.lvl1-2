@@ -17,7 +17,12 @@ app.use((0, cors_1.default)({
     origin: 'http://localhost:8000',
     credentials: true,
 }));
-mongoose_1.default.connect(configuration_1.mongoURL);
+if (configuration_1.mongoURL === undefined) {
+    console.error('Cannot connect to the database.');
+}
+else {
+    mongoose_1.default.connect(configuration_1.mongoURL);
+}
 app.use(express_1.default.json());
 app.use((0, express_session_1.default)({
     store: new FileStore({}),

@@ -38,6 +38,7 @@ function getItems(req, res) {
                     res.send(resJson);
                 }
                 else {
+                    req.session.user = undefined;
                     res.status(404).json({ "error": `cannot finde ${req.session.user} in datdbase` });
                 }
             }
@@ -77,6 +78,7 @@ function addItems(req, res) {
             }
             else {
                 const user = yield User.findOne({ login: req.session.user }).exec();
+                console.log(req.body.text);
                 if (!user.lastUniqueCount) {
                     user.lastUniqueCount = 1;
                 }
