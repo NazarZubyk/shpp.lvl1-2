@@ -33,7 +33,6 @@ COPY . .
 
 # Expose the port that the application listens on.
 EXPOSE 3005
-EXPOSE 27018
 
 # Run the application.
 CMD node dist/index.js
