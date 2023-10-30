@@ -12,9 +12,7 @@ FROM node:${NODE_VERSION}-alpine
 ENV NODE_ENV production
 
 
-WORKDIR /dist
-
-COPY package*.json ./
+WORKDIR /
 
 # Download dependencies as a separate step to take advantage of Docker's caching.
 # Leverage a cache mount to /root/.npm to speed up subsequent builds.
@@ -23,7 +21,7 @@ COPY package*.json ./
 RUN --mount=type=bind,source=package.json,target=package.json \
     --mount=type=bind,source=package-lock.json,target=package-lock.json \
     --mount=type=cache,target=/root/.npm \
-    npm ci --omit=dev \ npm install
+    npm ci --omit=dev 
 
 # Run the application as a non-root user.
 USER node
@@ -35,4 +33,4 @@ COPY . .
 EXPOSE 3005
 
 # Run the application.
-CMD node dist/index.js
+CMD npm run start

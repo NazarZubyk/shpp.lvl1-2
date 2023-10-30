@@ -11,11 +11,12 @@ import { error } from 'console';
 
 
 //filestore for sessions
+1
 const FileStore = require('session-file-store')(session);
 const app = express()
 //cors for use a frontend separately of back
 app.use(cors({
-   origin: 'http://localhost:8000',
+   origin: 'http://127.0.0.1:8000',
    credentials: true,
    }))
 

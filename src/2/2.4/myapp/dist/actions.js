@@ -17,11 +17,19 @@ function getItems(req, res) {
     var _a;
     return __awaiter(this, void 0, void 0, function* () {
         try {
+            console.log("---------------------------------------------------");
+            console.log("in get");
+            console.log("session id is - " + req.sessionID);
+            console.log("---------------------------------------------------");
             const errors = (0, express_validator_1.validationResult)(req);
             if (!errors.isEmpty()) {
                 return res.status(400).json({ "error": "bad request" });
             }
             if (req.session.user === undefined) {
+                console.log("inside undefined");
+                console.log("---------------------------------------------------");
+                console.log("unlogged");
+                console.log("---------------------------------------------------");
                 if (!((_a = req.session) === null || _a === void 0 ? void 0 : _a.tasks)) {
                     req.session.tasks = [];
                 }
@@ -33,6 +41,10 @@ function getItems(req, res) {
             }
             else {
                 const user = yield User.findOne({ login: req.session.user }).exec();
+                console.log("---------------------------------------------------");
+                console.log("must be a user");
+                console.log(user);
+                console.log("---------------------------------------------------");
                 if (user) {
                     const resJson = { items: user.tasks };
                     res.send(resJson);
@@ -198,7 +210,15 @@ function toLogin(req, res) {
             }
             else {
                 if (password === user[0].password) {
+                    console.log("login in");
+                    console.log("-----------------------------------------------------");
+                    console.log("session id is - " + req.sessionID);
+                    console.log(user[0].login);
+                    console.log("-----------------------------------------------------");
                     req.session.user = user[0].login;
+                    console.log("-----------------------------------------------------");
+                    console.log(req.session.user);
+                    console.log("-----------------------------------------------------");
                     res.send({ "ok": true });
                 }
                 else {
@@ -223,6 +243,10 @@ function toRegister(req, res) {
             const login = (_a = req.body) === null || _a === void 0 ? void 0 : _a.login;
             const password = (_b = req.body) === null || _b === void 0 ? void 0 : _b.pass;
             const tasks = [];
+            console.log("----------------------------------------------");
+            console.log("session id is - " + req.sessionID);
+            console.log(login + " : " + password);
+            console.log("----------------------------------------------");
             (0, mongoDBfunctions_1.addNewUserToBD)(login, password, tasks);
             res.send({ "ok": true });
         }

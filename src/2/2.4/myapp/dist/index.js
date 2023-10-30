@@ -11,10 +11,11 @@ const v1_1 = __importDefault(require("./api/v1"));
 const v2_1 = __importDefault(require("./api/v2"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const configuration_1 = require("./configuration");
+1;
 const FileStore = require('session-file-store')(express_session_1.default);
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)({
-    origin: 'http://localhost:8000',
+    origin: 'http://127.0.0.1:8000',
     credentials: true,
 }));
 if (configuration_1.mongoURL === undefined) {

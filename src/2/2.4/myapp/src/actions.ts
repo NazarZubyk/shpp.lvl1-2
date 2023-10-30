@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { IUserDocument, Task } from './types';
 import { addNewUserToBD } from './mongoDBfunctions';
 import { validationResult } from 'express-validator';
+import { Console } from 'console';
 
 
 
@@ -13,6 +14,11 @@ const User = require('./userForDB')
 
 export async function getItems (req: Request, res: Response){
     try {
+        console.log("---------------------------------------------------");
+        console.log("in get")
+        console.log("session id is - " + req.sessionID)
+        console.log("---------------------------------------------------");
+
         //validation part
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -22,7 +28,10 @@ export async function getItems (req: Request, res: Response){
         
         //for unlogged user
         if(req.session.user === undefined){
-
+            console.log("inside undefined")
+            console.log("---------------------------------------------------");
+            console.log("unlogged");
+            console.log("---------------------------------------------------");
             if (!req.session?.tasks) {
                 req.session.tasks = [] as unknown as [Task];
             }
@@ -38,7 +47,10 @@ export async function getItems (req: Request, res: Response){
         //for logged user
         else{        
             const user = await User.findOne({login: req.session.user}).exec();
-
+            console.log("---------------------------------------------------");
+            console.log("must be a user");
+            console.log(user)
+            console.log("---------------------------------------------------");
             if(user){
                 const resJson = {items: user.tasks}
                 res.send(resJson)
@@ -216,14 +228,22 @@ try {
         }
     const login = req.body?.login;
     const password = req.body?.pass;
-    const user:[IUserDocument] = await User.find({login:login})
+    const user:IUserDocument[] = await User.find({login:login})
    
     if(Number(user.length) === 0){
         res.status(401).json({ message: 'Invalid login' });
     }
     else{
         if(password === user[0].password){
+            console.log("login in")
+            console.log("-----------------------------------------------------")
+            console.log("session id is - " + req.sessionID)
+            console.log(user[0].login)
+            console.log("-----------------------------------------------------")
             req.session.user = user[0].login;
+            console.log("-----------------------------------------------------")
+            console.log(req.session.user)
+            console.log("-----------------------------------------------------")
             res.send({"ok":true})   
         }
         else{
@@ -247,9 +267,13 @@ export async function toRegister(req: Request, res: Response) {
 
         const login = req.body?.login;
         const password = req.body?.pass;
+        
     
         const tasks = [] as unknown as [Task]   
-    
+        console.log("----------------------------------------------")
+        console.log("session id is - " + req.sessionID)
+        console.log(login + " : " + password)
+        console.log("----------------------------------------------")
         addNewUserToBD(login,password,tasks)
     
         res.send({"ok":true})   
