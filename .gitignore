@@ -1,0 +1,30 @@
+# Ignore Node.js modules and npm cache
+node_modules/
+npm-debug.log
+
+# Ignore compiled files
+*.class
+*.o
+*.pyc
+
+# Ignore temporary files
+*.log
+*.tmp
+*.swp
+
+# Ignore build directories
+/build/
+/dist/
+
+# Ignore IDE and editor files
+.idea/
+.vscode/
+*.iml
+
+# Ignore macOS metadata files
+.DS_Store
+
+# Ignore sensitive files
+*.env
+*.key
+*.pem
