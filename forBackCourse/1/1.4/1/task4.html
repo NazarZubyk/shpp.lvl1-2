@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tsk4</title>
+    <style>
+        .blackBlock{
+            background-color: black;
+            visibility: visible;
+            margin: 5px;
+            height: 100px;
+            width: 100px;
+        }
+        .blackBlockHidden{
+            background-color: black;
+            visibility: hidden;
+            margin: 5px;
+            height: 100px;
+            width: 100px;
+        }
+    </style>
+</head>
+<body>
+    <input id="inputSelector" type="text">
+    <button id="button">select</button>
+    
+    <script>
+        const button = document.getElementById("button");
+
+        let reverseOfHidden = function(elem){    
+            let style = window.getComputedStyle(elem)     
+            style.visibility === "visible" ? elem.style.visibility = "hidden" : elem.style.visibility = "visible";
+        }
+
+        let functionForList = function(func, list){
+            let trueLength = list.length;
+            
+            for(let i = 0; i< list.length; i++){                              
+                func(list[i]);
+
+                if(trueLength>list.length){
+                    i--;
+                    trueLength--;
+                }
+                
+            }
+        }
+        
+        let toReverseElementsHidden = function(){
+            let text = document.getElementById("inputSelector").value;
+            let myNodeList = document.querySelectorAll(text);
+            functionForList(reverseOfHidden,myNodeList);
+        }
+
+        button.addEventListener('click',toReverseElementsHidden)
+    </script>
+
+        <div id="block" class="blackBlock"></div>
+        <div id="block" class="blackBlockHidden"></div>
+        <div id="block" class="blackBlock"></div>
+</body>
+</html>

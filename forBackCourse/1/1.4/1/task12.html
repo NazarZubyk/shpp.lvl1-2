@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>task12</title>
+
+    <style>
+        .backBox{
+            width: 123px;
+            height: 984px;
+            position: fixed;
+            right: 0;
+            top: 0;
+            background-color:blueviolet;
+            visibility: visible;
+        }
+    </style>
+</head>
+<body>
+    
+    <div id="informationBox" class="backBox">
+        <p id="X"></p>
+        <p id="Y"></p>
+        <p id="latitude1"></p>
+        <p id="longitude1"></p>
+    
+    </div>
+
+    <script>
+        let element = document.createElement("p")
+        element.innerHTML = navigator.languages[0];
+        document.getElementById("informationBox").appendChild(element)
+
+        //let geo = navigator.geolocation.getCurrentPosition();
+
+        
+
+        
+        function showPosition(position) {
+            let latitude1 = document.getElementById("latitude1");
+            let longitude1 = document.getElementById("longitude1");
+
+            latitude1.innerHTML= position.coords.latitude ;
+            console.log(position.coords.latitude)
+            longitude1.innerHTML = position.coords.longitude;
+        }
+
+        
+    
+        
+        
+
+        let setCoordinate = function(){
+            let x = document.getElementById("X");
+            let y = document.getElementById("Y");
+            x.innerHTML =`X: ${event.clientX}` 
+            y.innerHTML =`Y: ${event.clientY}` 
+        }
+
+        addEventListener("mousemove",()=>{setCoordinate()})
+        addEventListener("mousemove",()=>{navigator.geolocation.getCurrentPosition((pos)=>{showPosition(pos)})})
+    </script>
+</body>
+</html>

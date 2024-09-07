@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>task18</title>
+
+    <style>
+        .inputArea{
+            position: relative;
+            visibility: visible;
+            color: blue;
+            width: max-content;
+            
+        }
+    </style>
+
+</head>
+<body>
+    
+    <input class="inputArea" type="file" name="inputFile" id="inputFile1">
+    <script>
+        let area = document.getElementById("inputFile1")
+        
+        area.addEventListener("dragover",(event) => {
+            event.preventDefault();
+            area.style.border = "solid gray"
+        })
+        
+        
+        area.addEventListener("change", function(e){
+            if(e.target.files[0]){
+                e.target.style.border = "solid green"
+            }
+            else{
+                e.target.style.border = "solid red"
+            }
+        })
+    
+        
+    </script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .blackBlock{
+            background-color: black;
+            height: 100px;
+            width: 100px;
+        }
+
+        .hidden{
+            visibility: hidden;
+        }
+    </style>
+</head>
+<body>
+    <div id="block" class="blackBlock"></div>
+    <br>
+    <button id="button1">hide with CSS</button>
+    <button id="button2">delete with JS</button>
+    <button id="button3">combinate hidden</button>
+
+    <script>
+        const button1 = document.getElementById("button1");
+        const button2 = document.getElementById("button2");
+        const button3 = document.getElementById("button3");
+        const box = document.getElementById("block");
+
+        var choseFunctionRelativeToHidden = function(elem){
+            if(elem.className === "blackBlock"){
+            elem.className = "hidden"
+        }
+        else{
+            elem.className = "blackBlock"
+        }
+        }
+
+        button1.addEventListener("click", function(){box.style.display = "none"})
+        button2.addEventListener("click", function(){box.remove()})
+        button3.addEventListener("click", () => choseFunctionRelativeToHidden(box))
+
+        
+    </script>
+    
+
+    
+</body>
+</html>

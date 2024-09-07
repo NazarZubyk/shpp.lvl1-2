@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>task10</title>
+
+    <style>
+        .backBox{
+            width: 123px;
+            height: 984px;
+            position: fixed;
+            right: 0;
+            top: 0;
+            background-color:blueviolet;
+            visibility: visible;
+        }
+    </style>
+</head>
+<body>
+    <div id="informationBox" class="backBox">
+        <p id="X"></p>
+        <p id="Y"></p>
+    </div>
+
+    <script>
+        let setCoordinate = function(aaa){
+            let x = document.getElementById("X");
+            let y = document.getElementById("Y");
+            x.innerHTML =`X: ${event.clientX}` 
+            y.innerHTML =`Y: ${event.clientY}` 
+        }
+
+        addEventListener("mousemove",()=>{setCoordinate()})
+    </script>
+</body>
+</html>
